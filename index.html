@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+  </head>
+  <body>
+  
+	<input type="file" id="myfile" multiple />
+	<button id="submit" onclick="getFile()">Submit</button>
+	<div id="output">
+        <ul id="ulFilesContained"></ul>
+
+        <textarea id="textAreaFileSelectedAsText"></textarea>
+    </div>
+	
+  <script src="node_modules/jszip/dist/jszip.min.js"></script>
+  <script>
+
+      function getFile() {
+
+          var inputFile = document.getElementById("myfile");
+          var output = document.getElementById("output");
+          var zipFileToLoad = inputFile.files[0];
+          var filereader = new FileReader();
+          var JSONFile;
+
+          filereader.onload = function (event) {
+              var zipFileLoaded = new JSZip();
+              zipFileLoaded.loadAsync(event.target.result).then(function (zip) {
+                  var readJSON = new JSZip();
+                  console.log("zip", zip.files);
+
+                  for (var file in zip.files) {
+                      if (file == "meta.json") {
+                          console.log("Found");
+                          JSONFile = file;
+                      }
+                  }
+                  output.innerHTML += file + "</br>"
+              })
+          }
+          filereader.readAsArrayBuffer(zipFileToLoad);
+
+
+
+          setTimeout(function () {
+              console.log("JSONFile", JSONFile);
+              filereader.onload = function (event) {
+                  console.log("JSON", event.target.result);
+              }
+              filereader.read(JSONFile);
+          }, 300);
+      }
+
+      function displayFileAsText(event) {
+          var textAreaFileSelectedAsText = document.getElementById("textAreaFileSelectedAsText");
+          textAreaFileSelectedAsText.innerHTML = event.target.file.asText();
+      }
+
+      function readMetaJson(file) {
+          var filereader = new FileReader();
+          filereader.readAsDataURL(file);
+          filereader.onload = function (event) {
+              console.log("event", event.target.result);
+          }
+      }
+
+
+
+     
+
+  </script>
+  </body>
+</html>
