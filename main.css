@@ -1,0 +1,19 @@
+﻿body {
+}
+
+.item {
+    width: 100%;
+}
+
+.item-name {
+    width: 30%;
+    display: inline-block;
+}
+
+.item-status {
+    height: 10px;
+    width: 10px;
+    border: 1px solid black;
+    border-radius: 100%;
+    display: inline-block;
+}

@@ -3,20 +3,25 @@
   <head>
     <meta charset="UTF-8">
     <title>title</title>
+    <link rel="stylesheet" href="main.css" type="text/css" />
   </head>
   <body>
   
 	<input type="file" id="myfile" multiple />
 	<button id="submit" onclick="getFile()">Submit</button>
 	<div id="output">
-        <ul id="ulFilesContained"></ul>
+        <div class="item">
+            <div class="item-name">Printer Status
+                <div class="item-status" id="printerstatus"></div>
+            </div>
+        </div>
 
         <textarea id="textAreaFileSelectedAsText"></textarea>
     </div>
 	
   <script src="node_modules/jszip/dist/jszip.min.js"></script>
   <script>
-
+      var printerStatus = document.getElementById("printerstatus");
       function getFile() {
 
           var inputFile = document.getElementById("myfile");
@@ -34,36 +39,26 @@
                   for (var file in zip.files) {
                       if (file == "meta.json") {
                           console.log("Found");
+                          zipFileLoaded.file('meta.json').async('string').then(function (data) {
+                              var mydata = JSON.parse(data);
+                              console.log(mydata);
+                              if (mydata.bot_type == "replicator_5") {
+                                  console.log("true")
+                                  document.getElementById("printerstatus").style.backgroundColor = "green";
+                              }
+                          })
                           JSONFile = file;
                       }
+                      output.innerHTML += file + "</br>"
                   }
-                  output.innerHTML += file + "</br>"
               })
           }
           filereader.readAsArrayBuffer(zipFileToLoad);
-
-
-
-          setTimeout(function () {
-              console.log("JSONFile", JSONFile);
-              filereader.onload = function (event) {
-                  console.log("JSON", event.target.result);
-              }
-              filereader.read(JSONFile);
-          }, 300);
       }
 
       function displayFileAsText(event) {
           var textAreaFileSelectedAsText = document.getElementById("textAreaFileSelectedAsText");
           textAreaFileSelectedAsText.innerHTML = event.target.file.asText();
-      }
-
-      function readMetaJson(file) {
-          var filereader = new FileReader();
-          filereader.readAsDataURL(file);
-          filereader.onload = function (event) {
-              console.log("event", event.target.result);
-          }
       }
 
 

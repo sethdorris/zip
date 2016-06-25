@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jszip": "^3.0.0",
-    "zip": "^1.2.0"
+    "jszip": "^3.0.0"
   }
 }
